@@ -74,6 +74,7 @@ internal object Intents {
     internal fun createCameraForVideoIntent(context: Context, fileUri: Uri): Intent {
         val intent = Intent(MediaStore.ACTION_VIDEO_CAPTURE)
         try {
+            intent.putExtra(MediaStore.EXTRA_DURATION_LIMIT, 600) // MAX DURATION OF 10 MINUTES.
             intent.putExtra(MediaStore.EXTRA_OUTPUT, fileUri)
             //We have to explicitly grant the write permission since Intent.setFlag works only on API Level >=20
             grantWritePermission(context, intent, fileUri)
