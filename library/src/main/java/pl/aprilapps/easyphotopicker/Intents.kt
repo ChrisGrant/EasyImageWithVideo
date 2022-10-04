@@ -118,6 +118,7 @@ internal object Intents {
     internal fun createVideoChooserIntent(context: Context, chooserTitle: String, chooserType: ChooserType, cameraFileUri: Uri, allowMultiple: Boolean): Intent {
         val cameraIntents = ArrayList<Intent>()
         val captureIntent = Intent(android.provider.MediaStore.ACTION_VIDEO_CAPTURE)
+        captureIntent.putExtra(MediaStore.EXTRA_DURATION_LIMIT, 600) // MAX DURATION OF 10 MINUTES.
         val packageManager = context.packageManager
         val camList = packageManager.queryIntentActivities(captureIntent, 0)
         for (resolveInfo in camList) {
