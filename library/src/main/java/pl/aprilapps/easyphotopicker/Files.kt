@@ -17,6 +17,8 @@ import android.webkit.MimeTypeMap
 import androidx.annotation.RequiresApi
 import androidx.core.content.FileProvider
 import java.io.*
+import java.nio.file.Files
+import java.nio.file.StandardCopyOption
 
 
 object Files {
@@ -32,18 +34,23 @@ object Files {
     }
 
     private fun writeToFile(inputStream: InputStream, file: File) {
-        try {
-            val outputStream = FileOutputStream(file)
-            val buffer = ByteArray(1024)
-            var length: Int = inputStream.read(buffer)
-            while (length > 0) {
-                outputStream.write(buffer, 0, length)
-                length = inputStream.read(buffer)
-            }
-            outputStream.close()
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+            Files.copy(inputStream, file.toPath(), StandardCopyOption.REPLACE_EXISTING)
             inputStream.close()
-        } catch (e: Exception) {
-            e.printStackTrace()
+        } else {
+            try {
+                val outputStream = FileOutputStream(file)
+                val buffer = ByteArray(1024)
+                var length: Int = inputStream.read(buffer)
+                while (length > 0) {
+                    outputStream.write(buffer, 0, length)
+                    length = inputStream.read(buffer)
+                }
+                outputStream.close()
+                inputStream.close()
+            } catch (e: Exception) {
+                e.printStackTrace()
+            }
         }
     }
 
